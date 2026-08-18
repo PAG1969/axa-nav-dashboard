@@ -149,7 +149,7 @@ actual_dates = [
     '2026-08-13',
     '2026-08-14',
     '2026-08-17',
-    '2026-08-18'
+    '2026-08-18',
 ]
 
 actual_nav_path = [
@@ -184,7 +184,7 @@ actual_nav_path = [
 
 masked_dates = {'2026-07-30'}
 
-current_holdings = get_top_10_holdings(pd.to_datetime('2026-08-17'))
+current_holdings = get_top_10_holdings(pd.to_datetime('2026-08-18'))
 past_holdings = get_top_10_holdings(pd.to_datetime('2026-07-15'))
 
 tickers_list = list(
