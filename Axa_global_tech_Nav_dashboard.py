@@ -315,9 +315,17 @@ st.subheader("Modeled NAV vs. Actual NAV Over Time")
 import plotly.express as px
 
 chart_df = backtest_df.set_index("Date")[["Actual NAV", "Modeled NAV"]] 
-fig = px.line(chart_df, labels={"value": "NAV (£)", "Date": "Date"}) 
-fig.update_layout(yaxis_tickprefix="£", yaxis_title="NAV (£)") 
+fig = px.line(chart_df, labels={"value": "NAV (£)", "Date": "Date"},
+color_discrete_sequence=["#00f5d4", "#f72585"]
+)
+fig.update_layout(
+    yaxis_tickprefix="£", 
+    yaxis_title="NAV (£)",
+    plot_bgcolor="rgba(0,0,0,0)",
+    paper_bgcolor="rgba(0,0,0,0)"
+)
 st.plotly_chart(fig, use_container_width=True)
+
 
 
 live_top_10 = get_top_10_holdings()
