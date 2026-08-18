@@ -433,7 +433,7 @@ if not live_data.empty and len(live_data) >= 2:
     else f"+£{val_change:,.2f}"
   )
 
-st.metric(
+  st.metric(
     "Total Portfolio Value",
     f"£{total_predicted_val:,.2f}",
     delta=delta_str,
