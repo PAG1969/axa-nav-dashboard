@@ -5,7 +5,8 @@ import numpy as np
 import pandas as pd
 from scipy.optimize import minimize
 import yfinance as yf
-
+import streamlit as st
+st.title("Axa Global Technology NAV Predictor")
 
 def get_top_10_holdings(target_date=None):
   if target_date is not None:
