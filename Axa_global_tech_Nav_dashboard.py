@@ -1,7 +1,3 @@
-import streamlit as st
-
-st.title("AXA Global Technology NAV Predictor") st.write("Streamlit is working 😎")
-
 import datetime
 from datetime import timedelta
 from zoneinfo import ZoneInfo
