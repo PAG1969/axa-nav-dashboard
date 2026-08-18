@@ -308,7 +308,9 @@ for i, d_str in enumerate(matched_dates):
       'Error (%)': round(te_pct, 2),
   })
 
-backtest_df = pd.DataFrame(backtest_data) st.subheader("Backtest Performance Table") st.dataframe(backtest_df, use_container_width=True)
+backtest_df = pd.DataFrame(backtest_data) 
+st.subheader("Backtest Performance Table") 
+st.dataframe(backtest_df, use_container_width=True)
 
 live_top_10 = get_top_10_holdings()
 tier1_weight = live_top_10['Weight'].sum() tier2_weight = 1.0 - tier1_weight
