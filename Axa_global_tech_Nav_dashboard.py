@@ -307,6 +307,11 @@ for i, d_str in enumerate(matched_dates):
       'Modeled NAV': round(modeled_val, 4),
       'Error (%)': round(te_pct, 2),
   })
+backtest_df = pd.DataFrame(backtest_data) st.subheader("Backtest Performance Table") st.dataframe(backtest_df, use_container_width=True)
+
+# Add the performance comparison chart
+st.subheader("Modeled NAV vs. Actual NAV Over Time") chart_df = backtest_df.set_index("Date")[["Actual NAV", "Modeled NAV"]]
+st.line_chart(chart_df)
 
 backtest_df = pd.DataFrame(backtest_data) 
 st.subheader("Backtest Performance Table") 
