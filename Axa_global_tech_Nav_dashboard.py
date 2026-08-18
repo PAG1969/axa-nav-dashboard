@@ -426,13 +426,12 @@ if not live_data.empty and len(live_data) >= 2:
     )
   with col2:
     st.metric("Prior Close NAV", f"£{yesterday_nav:.4f}")
-    )
     
   delta_str = (
     f"-£{abs(val_change):,.2f}"
     if val_change < 0
     else f"+£{val_change:,.2f}"
-)
+  )
 
 st.metric(
     "Total Portfolio Value",
