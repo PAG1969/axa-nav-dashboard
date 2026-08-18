@@ -195,7 +195,8 @@ tickers_list.extend(
 data = yf.download(tickers_list, start=start_date, end=end_date, progress=False)[
     'Close'
 ]
-returns_df = data.pct_change(fill_method=None) fx_returns = data[['KRW=X', 'TWD=X']].pct_change(fill_method=None)
+returns_df = data.pct_change(fill_method=None) 
+fx_returns = data[['KRW=X', 'TWD=X']].pct_change(fill_method=None)
 
 if '000660.KS' in returns_df.columns and 'KRW=X' in fx_returns.columns:
   krw_ret = fx_returns['KRW=X'].shift(1).fillna(0)
