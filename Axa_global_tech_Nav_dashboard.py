@@ -313,12 +313,12 @@ st.dataframe(backtest_df, use_container_width=True)
 
 # Add the performance comparison chart
 st.subheader("Modeled NAV vs. Actual NAV Over Time") 
-chart_df = backtest_df.set_index("Date")[["Actual NAV", "Modeled NAV"]]
-st.line_chart(chart_df)
+import plotly.express as px
 
-backtest_df = pd.DataFrame(backtest_data) 
-st.subheader("Backtest Performance Table") 
-st.dataframe(backtest_df, use_container_width=True)
+fig = px.line(chart_df, labels={"value": "NAV (£)", "Date": "Date"}) 
+fig.update_layout(yaxis_tickprefix="£", yaxis_title="NAV (£)") 
+st.plotly_chart(fig, use_container_width=True)
+
 
 live_top_10 = get_top_10_holdings()
 tier1_weight = live_top_10['Weight'].sum() 
