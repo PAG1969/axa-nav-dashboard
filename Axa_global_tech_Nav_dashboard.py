@@ -120,7 +120,7 @@ def get_top_10_holdings(target_date=None):
 
 
 start_date = '2026-07-01'
-end_date = '2026-08-18'
+end_date = '2026-08-19'
 
 actual_dates = [
     '2026-07-13',
@@ -149,6 +149,7 @@ actual_dates = [
     '2026-08-13',
     '2026-08-14',
     '2026-08-17',
+    '2026-08-18'
 ]
 
 actual_nav_path = [
@@ -178,6 +179,7 @@ actual_nav_path = [
     4.24,
     4.2860,
     4.2690,
+    4.2350,
 ]
 
 masked_dates = {'2026-07-30'}
