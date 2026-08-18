@@ -436,4 +436,5 @@ if not live_data.empty and len(live_data) >= 2:
 else:
   st.error("Error: Insufficient live market data fetched for prediction.")
 
-
+if __name__ == '__main__':
+  run_portfolio_system()
