@@ -2,7 +2,6 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 import numpy as np
 import pandas as pd
-import plotly.express as px
 from scipy.optimize import minimize
 import streamlit as st
 import yfinance as yf
@@ -312,10 +311,10 @@ backtest_df = pd.DataFrame(backtest_data)
 st.subheader("Backtest Performance Table") 
 st.dataframe(backtest_df, use_container_width=True)
 
-# Add the performance comparison chart
 st.subheader("Modeled NAV vs. Actual NAV Over Time") 
 import plotly.express as px
 
+chart_df = backtest_df.set_index("Date")[["Actual NAV", "Modeled NAV"]] 
 fig = px.line(chart_df, labels={"value": "NAV (£)", "Date": "Date"}) 
 fig.update_layout(yaxis_tickprefix="£", yaxis_title="NAV (£)") 
 st.plotly_chart(fig, use_container_width=True)
