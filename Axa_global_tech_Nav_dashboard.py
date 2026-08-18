@@ -426,13 +426,20 @@ if not live_data.empty and len(live_data) >= 2:
     )
   with col2:
     st.metric("Prior Close NAV", f"£{yesterday_nav:.4f}")
+    )
+    
+  delta_str = (
+    f"-£{abs(val_change):,.2f}"
+    if val_change < 0
+    else f"+£{val_change:,.2f}"
+)
 
-  st.metric(
-      "Total Portfolio Value",
-      f"£{total_predicted_val:,.2f}",
-      delta=val_change, #pass the raw float/int here",
-      delta_color="normal",
-  )
+st.metric(
+    "Total Portfolio Value",
+    f"£{total_predicted_val:,.2f}",
+    delta=delta_str,
+    delta_color="normal",
+)
   st.write(
       f"**Optimized Weights** -> SOXX: {opt_soxx:.2f}, IGV: {opt_igv:.2f},"
       f" Core: {opt_core:.2f}"
