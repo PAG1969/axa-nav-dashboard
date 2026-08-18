@@ -218,7 +218,8 @@ available_dates = [
 actual_nav_dict = dict(zip(actual_dates, actual_nav_path)) 
 matched_dates = [d for d in available_dates if d in actual_nav_dict]
 
-soxx_ret = returns_df['SOXX'].fillna(0.0) igv_ret = returns_df['IGV'].fillna(0.0) core_residual_ret = (
+soxx_ret = returns_df['SOXX'].fillna(0.0) 
+igv_ret = returns_df['IGV'].fillna(0.0) core_residual_ret = (
     returns_df['META'].fillna(0.0)
     + returns_df['AMZN'].fillna(0.0)
     + returns_df['TSLA'].fillna(0.0)
