@@ -430,8 +430,8 @@ if not live_data.empty and len(live_data) >= 2:
   st.metric(
       "Total Portfolio Value",
       f"£{total_predicted_val:,.2f}",
-      delta=f"£{val_change:+,.2f}",
-      delta_color="inverse" if val_change < 0 else "normal",
+      delta=val_change, #pass the raw float/int here",
+      delta_color="normal",
   )
   st.write(
       f"**Optimized Weights** -> SOXX: {opt_soxx:.2f}, IGV: {opt_igv:.2f},"
