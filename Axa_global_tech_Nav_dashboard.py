@@ -431,7 +431,7 @@ if not live_data.empty and len(live_data) >= 2:
       "Total Portfolio Value",
       f"£{total_predicted_val:,.2f}",
       delta=f"£{val_change:+,.2f}",
-      delta_color="normal",
+      delta_color="inverse" if val_change < 0 else "normal",
   )
   st.write(
       f"**Optimized Weights** -> SOXX: {opt_soxx:.2f}, IGV: {opt_igv:.2f},"
