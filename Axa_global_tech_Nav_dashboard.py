@@ -2,6 +2,7 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 import numpy as np
 import pandas as pd
+import plotly.express as px
 from scipy.optimize import minimize
 import streamlit as st
 import yfinance as yf
