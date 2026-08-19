@@ -120,7 +120,7 @@ def get_top_10_holdings(target_date=None):
 
 
 start_date = '2026-07-01'
-end_date = '2026-08-19'
+end_date = '2026-08-20'
 
 actual_dates = [
     '2026-07-13',
@@ -150,6 +150,7 @@ actual_dates = [
     '2026-08-14',
     '2026-08-17',
     '2026-08-18',
+    '2026-08-19',
 ]
 
 actual_nav_path = [
@@ -180,11 +181,12 @@ actual_nav_path = [
     4.2860,
     4.2690,
     4.2350,
+    4.1170
 ]
 
 masked_dates = {'2026-07-30'}
 
-current_holdings = get_top_10_holdings(pd.to_datetime('2026-08-18'))
+current_holdings = get_top_10_holdings(pd.to_datetime('2026-08-19'))
 past_holdings = get_top_10_holdings(pd.to_datetime('2026-07-15'))
 
 tickers_list = list(
