@@ -429,7 +429,7 @@ def run_portfolio_system():
         delta=f"{gross_return*100:+.2f}%",
     )
 
-    gia_val = gia_units * predicted_nav
+        gia_val = gia_units * predicted_nav
     isa_val = isa_units * predicted_nav
     total_predicted_val = total_units * predicted_nav
 
@@ -439,13 +439,14 @@ def run_portfolio_system():
 
     val_change = total_predicted_val - total_prev_val
     formatted_val_change = f"£{val_change:+,.2f}"
-    # Native float passed to delta so Streamlit correctly applies red/green formatting
+
     st.metric(
         label="Total Portfolio Value",
         value=f"£{total_predicted_val:,.2f}",
         delta=formatted_val_change,
         delta_color="normal",
     )
+
 
     col1, col2 = st.columns(2)
     with col1:
