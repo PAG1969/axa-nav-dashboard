@@ -429,7 +429,7 @@ def run_portfolio_system():
         delta=f"{gross_return*100:+.2f}%",
     )
 
-        gia_val = gia_units * predicted_nav
+    gia_val = gia_units * predicted_nav
     isa_val = isa_units * predicted_nav
     total_predicted_val = total_units * predicted_nav
 
