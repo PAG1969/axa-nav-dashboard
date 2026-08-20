@@ -192,6 +192,15 @@ def run_portfolio_system():
       4.0260,
   ]
 
+  # --- SIDEBAR WIDGETS FOR DYNAMIC CONTROL ---
+  st.sidebar.header("Control Panel")
+  override_noon_nav = st.sidebar.number_input(
+      "Anchor Noon NAV (£)",
+      value=float(actual_nav_path[-1]),
+      format="%.4f",
+      step=0.001,
+  )
+
   masked_dates = {"2026-07-30"}
 
   current_holdings = get_top_10_holdings(pd.to_datetime("2026-08-20"))
@@ -416,7 +425,7 @@ def run_portfolio_system():
         + (opt_core * live_core_residual)
     )
 
-    official_noon_nav = actual_nav_path[-1]
+    official_noon_nav = override_noon_nav
 
     gross_return = (
         (tier1_weight * t1_return) + (tier2_weight * t2_return) - daily_fee_drag
@@ -466,12 +475,12 @@ def run_portfolio_system():
     if predicted_nav > official_noon_nav:
       st.success(
           f"DECISION: PROCEED\n\nREASON: Estimated NAV (£{predicted_nav:.4f})"
-          f" is ABOVE Yesterday's 12:00 Noon NAV (£{official_noon_nav:.4f})"
+          f" is ABOVE Anchor Noon NAV (£{official_noon_nav:.4f})"
       )
     else:
       st.warning(
           f"DECISION: HOLD / CANCEL\n\nREASON: Estimated NAV (£{predicted_nav:.4f})"
-          f" is BELOW Yesterday's 12:00 Noon NAV (£{official_noon_nav:.4f})"
+          f" is BELOW Anchor Noon NAV (£{official_noon_nav:.4f})"
       )
 
     driver_rows = []
@@ -493,4 +502,3 @@ def run_portfolio_system():
 
 if __name__ == "__main__":
   run_portfolio_system()
-
