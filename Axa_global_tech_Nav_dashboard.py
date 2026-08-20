@@ -8,7 +8,7 @@ from scipy.optimize import minimize
 import streamlit as st
 import yfinance as yf
 
-st.title("AXA Global Technology NAV Predictor") 
+st.title("AXA Global Technology NAV Predictor")
 st.write("Streamlit Dashboard Active 🚀")
 
 
@@ -217,8 +217,8 @@ def run_portfolio_system():
   data = yf.download(
       tickers_list, start=start_date, end=end_date, progress=False
   )["Close"]
-  returns_df = data.pct_change(fill_method=None)
-  fx_returns = data[["KRW=X", "TWD=X"]].pct_change(fill_method=None)
+  returns_df = data.pct_change().dropna(how="all")
+  fx_returns = data[["KRW=X", "TWD=X"]].pct_change().dropna(how="all")
 
   if "000660.KS" in returns_df.columns and "KRW=X" in fx_returns.columns:
     krw_ret = fx_returns["KRW=X"].shift(1).fillna(0)
@@ -342,7 +342,7 @@ def run_portfolio_system():
   backtest_df = pd.DataFrame(backtest_data)
   st.dataframe(backtest_df)
 
-  # --- RESTORED PLOTLY CHART ---
+  # Plotly Chart
   st.subheader("Modeled NAV vs. Actual NAV Over Time")
   fig = px.line(
       backtest_df,
@@ -416,7 +416,6 @@ def run_portfolio_system():
         + (opt_core * live_core_residual)
     )
 
-    # Anchored strictly to the confirmed 12:00 noon published NAV baseline
     official_noon_nav = actual_nav_path[-1]
 
     gross_return = (
@@ -430,7 +429,6 @@ def run_portfolio_system():
         delta=f"{gross_return*100:+.2f}%",
     )
 
-    # --- RESTORED UNIT VALUATIONS & ACCOUNT BREAKDOWN ---
     gia_val = gia_units * predicted_nav
     isa_val = isa_units * predicted_nav
     total_predicted_val = total_units * predicted_nav
@@ -441,10 +439,12 @@ def run_portfolio_system():
 
     val_change = total_predicted_val - total_prev_val
 
+    # Native float passed to delta so Streamlit correctly applies red/green formatting
     st.metric(
         label="Total Portfolio Value",
         value=f"£{total_predicted_val:,.2f}",
-        delta=f"£{val_change:+,.2f} ({gross_return*100:+.2f}%)",
+        delta=val_change,
+        delta_color="normal",
     )
 
     col1, col2 = st.columns(2)
@@ -461,7 +461,6 @@ def run_portfolio_system():
 
     st.divider()
 
-    # --- RESTORED DAILY TRADE DECISION ENGINE ---
     st.subheader("Daily Trade Decision Engine")
     if predicted_nav > official_noon_nav:
       st.success(
@@ -493,3 +492,4 @@ def run_portfolio_system():
 
 if __name__ == "__main__":
   run_portfolio_system()
+
