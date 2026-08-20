@@ -7,7 +7,8 @@ from scipy.optimize import minimize
 import streamlit as st
 import yfinance as yf
 
-st.title("AXA Global Technology NAV Predictor") st.write("Streamlit Dashboard Active 🚀")
+st.title("AXA Global Technology NAV Predictor") 
+st.write("Streamlit Dashboard Active 🚀")
 
 
 def get_top_10_holdings(target_date=None):
