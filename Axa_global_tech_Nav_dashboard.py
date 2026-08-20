@@ -8,7 +8,7 @@ from scipy.optimize import minimize
 import streamlit as st
 import yfinance as yf
 
-st.title("AXA Global Technology NAV Predictor")
+st.title("AXA Global Technology NAV Predictor") 
 st.write("Streamlit Dashboard Active 🚀")
 
 
@@ -438,15 +438,15 @@ def run_portfolio_system():
     total_prev_val = total_units * official_noon_nav
 
     val_change = total_predicted_val - total_prev_val
-    formatted_val_change = f"£{val_change:+,.2f}"
+    formatted_val_change = f"£{val_change:+,.2f} ({gross_return*100:+.2f}%)"
+    delta_col = "normal" if val_change >= 0 else "inverse"
 
     st.metric(
         label="Total Portfolio Value",
         value=f"£{total_predicted_val:,.2f}",
         delta=formatted_val_change,
-        delta_color="normal",
+        delta_color=delta_col,
     )
-
 
     col1, col2 = st.columns(2)
     with col1:
