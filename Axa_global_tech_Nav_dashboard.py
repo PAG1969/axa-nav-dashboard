@@ -3,7 +3,7 @@ from datetime import timedelta
 from zoneinfo import ZoneInfo
 import numpy as np
 import pandas as pd
-plotly_express as px
+import plotly_express as px
 from scipy.optimize import minimize
 import streamlit as st
 import yfinance as yf
