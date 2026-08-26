@@ -198,7 +198,7 @@ def run_portfolio_system():
       4.0570,
       4.0760,
       4.0010,
-      4.050,
+      4.0500
   ]
 
   # --- SIDEBAR WIDGETS FOR DYNAMIC CONTROL ---
