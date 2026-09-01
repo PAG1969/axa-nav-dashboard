@@ -8,7 +8,7 @@ from scipy.optimize import minimize
 import streamlit as st
 import yfinance as yf
 
-st.title("AXA Global Technology NAV Predictor")
+st.title("AXA Global Technology D-Class Unit NAV Predictor")
 st.write("Streamlit Dashboard Active 🚀")
 
 
