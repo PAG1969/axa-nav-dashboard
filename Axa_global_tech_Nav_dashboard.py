@@ -8,7 +8,7 @@ from scipy.optimize import minimize
 import streamlit as st
 import yfinance as yf
 
-st.title("AXA Global Technology NAV Predictor") 
+st.title("AXA Global Technology NAV Predictor")
 st.write("Streamlit Dashboard Active 🚀")
 
 
@@ -16,9 +16,10 @@ def get_top_10_holdings(target_date=None):
   if target_date is not None:
     target_date = pd.to_datetime(target_date)
 
-  cutoff_date = pd.to_datetime("2026-08-01")
+  cutoff_aug = pd.to_datetime("2026-08-01")
+  cutoff_sep = pd.to_datetime("2026-09-01")
 
-  if target_date is not None and target_date < cutoff_date:
+  if target_date is not None and target_date < cutoff_aug:
     return pd.DataFrame({
         "Name": [
             "SK Hynix",
@@ -56,20 +57,9 @@ def get_top_10_holdings(target_date=None):
             0.0300,
             0.0280,
         ],
-        "Currency": [
-            "KRW",
-            "USD",
-            "TWD",
-            "USD",
-            "USD",
-            "USD",
-            "USD",
-            "USD",
-            "USD",
-            "USD",
-        ],
+        "Currency": ["KRW", "USD", "TWD", "USD", "USD", "USD", "USD", "USD", "USD", "USD"],
     })
-  else:
+  elif target_date is not None and target_date < cutoff_sep:
     return pd.DataFrame({
         "Name": [
             "SK Hynix",
@@ -107,18 +97,47 @@ def get_top_10_holdings(target_date=None):
             0.0304,
             0.0280,
         ],
-        "Currency": [
-            "KRW",
-            "USD",
-            "TWD",
-            "USD",
-            "USD",
-            "USD",
-            "USD",
-            "USD",
-            "USD",
-            "USD",
+        "Currency": ["KRW", "USD", "TWD", "USD", "USD", "USD", "USD", "USD", "USD", "USD"],
+    })
+  else:
+    return pd.DataFrame({
+        "Name": [
+            "NVIDIA",
+            "TSMC",
+            "Alphabet Class C",
+            "SK Hynix",
+            "Broadcom",
+            "Micron",
+            "Cloudflare",
+            "Apple",
+            "Lam Research",
+            "Microsoft",
         ],
+        "Ticker": [
+            "NVDA",
+            "2330.TW",
+            "GOOG",
+            "000660.KS",
+            "AVGO",
+            "MU",
+            "NET",
+            "AAPL",
+            "LRCX",
+            "MSFT",
+        ],
+        "Weight": [
+            0.0741,
+            0.0646,
+            0.0575,
+            0.0545,
+            0.0425,
+            0.0390,
+            0.0342,
+            0.0337,
+            0.0323,
+            0.0309,
+        ],
+        "Currency": ["USD", "TWD", "USD", "KRW", "USD", "USD", "USD", "USD", "USD", "USD"],
     })
 
 
@@ -377,7 +396,7 @@ def run_portfolio_system():
   st.plotly_chart(fig, use_container_width=True)
 
   st.subheader("Live Pre-Market Prediction")
-  live_top_10 = get_top_10_holdings()
+  live_top_10 = get_top_10_holdings(pd.to_datetime("2026-09-01"))
   tier1_weight = live_top_10["Weight"].sum()
   tier2_weight = 1.0 - tier1_weight
 
