@@ -235,13 +235,15 @@ def run_portfolio_system():
 
   masked_dates = {"2026-07-30"}
 
-  current_holdings = get_top_10_holdings(pd.to_datetime("2026-09-01"))
   past_holdings = get_top_10_holdings(pd.to_datetime("2026-07-15"))
+  aug_holdings = get_top_10_holdings(pd.to_datetime("2026-08-15"))
+  current_holdings = get_top_10_holdings(pd.to_datetime("2026-09-01"))
 
   tickers_list = list(
       set(
-          current_holdings["Ticker"].tolist()
-          + past_holdings["Ticker"].tolist()
+          past_holdings["Ticker"].tolist()
+          + aug_holdings["Ticker"].tolist()
+          + current_holdings["Ticker"].tolist()
       )
   )
   tickers_list.extend([
