@@ -8,7 +8,7 @@ from scipy.optimize import minimize
 import streamlit as st
 import yfinance as yf
 
-st.title("AXA Global Technology D-Class Unit NAV Predictor")
+st.title("AXA Global Technology D=Class Unit NAV Predictor")
 st.write("Streamlit Dashboard Active 🚀")
 
 
@@ -145,7 +145,7 @@ def run_portfolio_system():
   st.subheader("Model Execution & Performance Engine")
 
   start_date = "2026-07-01"
-  end_date = "2026-09-02"
+  end_date = "2026-09-03"  # Extended to include today's settled close
 
   actual_dates = [
       "2026-07-13",
@@ -184,6 +184,7 @@ def run_portfolio_system():
       "2026-08-27",
       "2026-08-28",
       "2026-09-01",
+      "2026-09-02",  # Added today's official published print date (£4.029)
   ]
 
   actual_nav_path = [
@@ -223,6 +224,7 @@ def run_portfolio_system():
       4.140,
       4.179,
       4.101,
+      4.029,  # Today's actual published noon NAV anchor update
   ]
 
   # --- SIDEBAR WIDGETS FOR DYNAMIC CONTROL ---
@@ -398,7 +400,7 @@ def run_portfolio_system():
   fig.update_layout(plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)")
   st.plotly_chart(fig, use_container_width=True)
 
-  st.subheader("Live Pre-Market Prediction")
+  st.subheader("Live Pre-Market Prediction (11:00 AM Decision Engine)")
   live_top_10 = get_top_10_holdings(pd.to_datetime("2026-09-01"))
   tier1_weight = live_top_10["Weight"].sum()
   tier2_weight = 1.0 - tier1_weight
@@ -412,19 +414,22 @@ def run_portfolio_system():
       "KRW=X",
       "TWD=X",
   ]
-  live_data = yf.download(
+  
+  # Fetch last 5 days of data to ensure we have clean, settled t-1 closes
+  raw_live_data = yf.download(
       live_tickers, period="5d", interval="1d", progress=False
   )["Close"]
-  live_data = live_data.ffill().dropna(how="all")
+  live_data = raw_live_data.ffill().dropna(how="all")
 
   gia_units = 8970.39
   isa_units = 4581.90
   total_units = gia_units + isa_units
 
   if not live_data.empty and len(live_data) >= 2:
+    # Use strictly the last two fully closed sessions (t-2 to t-1 settlement)
     prev_close = live_data.iloc[-2]
-    latest_premarket = live_data.iloc[-1]
-    asset_returns = (latest_premarket - prev_close) / prev_close
+    latest_settled_close = live_data.iloc[-1]
+    asset_returns = (latest_settled_close - prev_close) / prev_close
 
     fx_data = live_data[["KRW=X", "TWD=X"]].pct_change().dropna()
     fx_returns = (
@@ -468,7 +473,7 @@ def run_portfolio_system():
     predicted_nav = official_noon_nav * (1.0 + gross_return)
 
     st.metric(
-        label="Estimated Live NAV (vs 12:00 Noon Published)",
+        label="Estimated Settled NAV (for 11:00 AM Decision)",
         value=f"£{predicted_nav:.4f}",
         delta=f"{gross_return*100:+.2f}%",
     )
@@ -506,16 +511,18 @@ def run_portfolio_system():
 
     st.divider()
 
-    st.subheader("Daily Trade Decision Engine")
+    st.subheader("Morning Trade Decision Engine")
     if predicted_nav > official_noon_nav:
       st.success(
-          f"DECISION: PROCEED\n\nREASON: Estimated NAV (£{predicted_nav:.4f})"
-          f" is ABOVE Anchor Noon NAV (£{official_noon_nav:.4f})"
+          f"DECISION: PROCEED\n\nREASON: Settled overnight model NAV"
+          f" (£{predicted_nav:.4f}) is ABOVE Anchor Noon NAV"
+          f" (£{official_noon_nav:.4f})"
       )
     else:
       st.warning(
-          f"DECISION: HOLD / CANCEL\n\nREASON: Estimated NAV (£{predicted_nav:.4f})"
-          f" is BELOW Anchor Noon NAV (£{official_noon_nav:.4f})"
+          f"DECISION: HOLD / CANCEL\n\nREASON: Settled overnight model NAV"
+          f" (£{predicted_nav:.4f}) is BELOW Anchor Noon NAV"
+          f" (£{official_noon_nav:.4f})"
       )
 
     driver_rows = []
@@ -526,13 +533,13 @@ def run_portfolio_system():
       driver_rows.append({
           "Asset / Driver": f"{name} ({ticker})",
           "Category": "Tier-1 Direct",
-          "Live Return (%)": round(ret, 2),
+          "Settled Return (%)": round(ret, 2),
       })
 
     drivers_df = pd.DataFrame(driver_rows)
     st.dataframe(drivers_df)
   else:
-    st.error("Error: Insufficient live market data fetched for prediction.")
+    st.error("Error: Insufficient settled market data fetched for prediction.")
 
 
 if __name__ == "__main__":
