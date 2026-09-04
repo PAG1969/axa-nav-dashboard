@@ -145,7 +145,7 @@ def run_portfolio_system():
   st.subheader("Model Execution & Performance Engine")
 
   start_date = "2026-07-01"
-  end_date = "2026-09-07"  # Extended to include today's settled close
+  end_date = "2026-09-04"  # Extended to include today's settled close
 
   actual_dates = [
       "2026-07-13",
