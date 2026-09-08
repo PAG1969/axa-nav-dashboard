@@ -230,7 +230,7 @@ def run_portfolio_system():
       4.029,  # Today's actual published noon NAV anchor update
       4.020,
       4.080,
-      4.140,
+      4.130,
   ]
 
   # --- SIDEBAR WIDGETS FOR DYNAMIC CONTROL ---
