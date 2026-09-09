@@ -145,7 +145,7 @@ def run_portfolio_system():
   st.subheader("Model Execution & Performance Engine")
 
   start_date = "2026-07-01"
-  end_date = "2026-09-08"  # Extended to include today's settled close
+  end_date = "2026-09-10"  # Extended to include today's settled close
 
   actual_dates = [
       "2026-07-13",
@@ -188,6 +188,8 @@ def run_portfolio_system():
       "2026-09-03",
       "2026-09-04",
       "2026-09-07",
+      "2026-09-08",
+      "2026-09-09",
   ]
 
   actual_nav_path = [
@@ -231,6 +233,8 @@ def run_portfolio_system():
       4.020,
       4.080,
       4.130,
+      4.130,
+      4.160,
   ]
 
   # --- SIDEBAR WIDGETS FOR DYNAMIC CONTROL ---
