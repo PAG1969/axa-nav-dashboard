@@ -192,6 +192,7 @@ def run_portfolio_system():
       "2026-09-09",
       "2026-09-10",
       "2026-09-11",
+      "2026-09-14",
   ]
 
   actual_nav_path = [
@@ -239,6 +240,7 @@ def run_portfolio_system():
       4.160,
       4.160,
       4.100,
+      4.060,
   ]
 
   # --- SIDEBAR WIDGETS FOR DYNAMIC CONTROL ---
@@ -254,7 +256,7 @@ def run_portfolio_system():
 
   past_holdings = get_top_10_holdings(pd.to_datetime("2026-07-15"))
   aug_holdings = get_top_10_holdings(pd.to_datetime("2026-08-15"))
-  current_holdings = get_top_10_holdings(pd.to_datetime("2026-09-11"))
+  current_holdings = get_top_10_holdings(pd.to_datetime("2026-09-14"))
 
   tickers_list = list(
       set(
