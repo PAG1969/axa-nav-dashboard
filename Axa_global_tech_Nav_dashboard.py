@@ -495,19 +495,23 @@ def run_portfolio_system():
     # --- Separate Cash Value Chart ---
     st.subheader("Portfolio Cash Value Tracking (£)")
 
-    # Ensure unit variables are defined (using your static wrapper counts)
-    gia_units = 8,970.39
-    isa_units = 4,581.90
+    # Define static wrapper units
+    gia_units = 8970.39
+    isa_units = 4581.90
+
+    # Calculate cash values as new columns first
+    backtest_df["GIA_Cash"] = backtest_df["Actual NAV"] * gia_units
+    backtest_df["ISA_Cash"] = backtest_df["Actual NAV"] * isa_units
 
     cash_fig = px.line(
         backtest_df,
         x="Date",
-        y=[backtest_df["Actual NAV"] * gia_units, backtest_df["Actual NAV"] * isa_units],
+        y=["GIA_Cash", "ISA_Cash"],
         labels={"value": "Cash Value (£)", "variable": "Wrapper"},
-        color_discrete_map={"variable_0": "#2ca02c", "variable_1": "#1f77b4"}
+        color_discrete_map={"GIA_Cash": "#2ca02c", "ISA_Cash": "#1f77b4"}
     )
 
-    # Clean up trace names for clarity
+    # Clean up trace names for the legend
     cash_fig.data[0].name = "GIA Cash Value"
     cash_fig.data[1].name = "ISA Cash Value"
 
