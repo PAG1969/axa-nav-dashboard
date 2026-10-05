@@ -492,28 +492,34 @@ def run_portfolio_system():
         plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)"
     )
     st.plotly_chart(fig, use_container_width=True)
-    # --- Separate Cash Value Chart ---
+    # --- Separate Cash Value Chart with Total Portfolio Line ---
     st.subheader("Portfolio Cash Value Tracking (£)")
 
     # Define static wrapper units
     gia_units = 8970.39
     isa_units = 4581.90
 
-    # Calculate cash values as new columns first
+    # Calculate individual and total cash values
     backtest_df["GIA_Cash"] = backtest_df["Actual NAV"] * gia_units
     backtest_df["ISA_Cash"] = backtest_df["Actual NAV"] * isa_units
+    backtest_df["Total_Portfolio_Cash"] = backtest_df["GIA_Cash"] + backtest_df["ISA_Cash"]
 
     cash_fig = px.line(
         backtest_df,
         x="Date",
-        y=["GIA_Cash", "ISA_Cash"],
+        y=["GIA_Cash", "ISA_Cash", "Total_Portfolio_Cash"],
         labels={"value": "Cash Value (£)", "variable": "Wrapper"},
-        color_discrete_map={"GIA_Cash": "#2ca02c", "ISA_Cash": "#1f77b4"}
+        color_discrete_map={
+            "GIA_Cash": "#2ca02c", 
+            "ISA_Cash": "#1f77b4", 
+            "Total_Portfolio_Cash": "#ff7f0e"  # Distinct color for the total line
+        }
     )
 
     # Clean up trace names for the legend
     cash_fig.data[0].name = "GIA Cash Value"
     cash_fig.data[1].name = "ISA Cash Value"
+    cash_fig.data[2].name = "Total Portfolio Value"
 
     cash_fig.update_layout(
         plot_bgcolor="rgba(0,0,0,0)", 
@@ -522,7 +528,7 @@ def run_portfolio_system():
     )
 
     st.plotly_chart(cash_fig, use_container_width=True)
-
+    
     st.subheader("Live Pre-Market Prediction (11:00 AM Decision Engine)")
     live_top_10 = get_top_10_holdings(pd.to_datetime("2026-10-02"))
     tier1_weight = live_top_10["Weight"].sum()
