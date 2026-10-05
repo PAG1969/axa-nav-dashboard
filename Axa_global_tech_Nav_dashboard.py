@@ -492,6 +492,32 @@ def run_portfolio_system():
         plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)"
     )
     st.plotly_chart(fig, use_container_width=True)
+    # --- Separate Cash Value Chart ---
+    st.subheader("Portfolio Cash Value Tracking (£)")
+
+    # Ensure unit variables are defined (using your static wrapper counts)
+    gia_units = 8,970.39
+    isa_units = 4,581.90
+
+    cash_fig = px.line(
+        backtest_df,
+        x="Date",
+        y=[backtest_df["Actual NAV"] * gia_units, backtest_df["Actual NAV"] * isa_units],
+        labels={"value": "Cash Value (£)", "variable": "Wrapper"},
+        color_discrete_map={"variable_0": "#2ca02c", "variable_1": "#1f77b4"}
+    )
+
+    # Clean up trace names for clarity
+    cash_fig.data[0].name = "GIA Cash Value"
+    cash_fig.data[1].name = "ISA Cash Value"
+
+    cash_fig.update_layout(
+        plot_bgcolor="rgba(0,0,0,0)", 
+        paper_bgcolor="rgba(0,0,0,0)",
+        margin=dict(t=30, b=30)
+    )
+
+    st.plotly_chart(cash_fig, use_container_width=True)
 
     st.subheader("Live Pre-Market Prediction (11:00 AM Decision Engine)")
     live_top_10 = get_top_10_holdings(pd.to_datetime("2026-10-02"))
