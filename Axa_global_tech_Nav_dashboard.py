@@ -400,7 +400,11 @@ def run_portfolio_system():
         returns_df["META"].fillna(0.0)
         + returns_df["AMZN"].fillna(0.0)
         + returns_df["TSLA"].fillna(0.0)
-    ) / 3.0
+        + returns_df["AMD"].fillna(0.0)
+        + returns_df["AVGO"].fillna(0.0)
+        + returns_df["CIEN"].fillna(0.0)
+        + returns_df["XNTK"].fillna(0.0)
+    ) / 7.0
 
     daily_fee_drag = 0.0068 / 365.0
 
@@ -595,7 +599,11 @@ def run_portfolio_system():
             asset_returns.get("META", 0.0)
             + asset_returns.get("AMZN", 0.0)
             + asset_returns.get("TSLA", 0.0)
-        ) / 3.0
+            + asset_returns.get("AMD", 0.0)
+            + asset_returns.get("AVGO", 0.0)
+            + asset_returns.get("CIEN", 0.0)
+            + asset_returns.get("XNTK", 0.0)
+        ) / 7.0
 
         t2_return = (
             (opt_soxx * asset_returns.get("SOXX", 0.0))
