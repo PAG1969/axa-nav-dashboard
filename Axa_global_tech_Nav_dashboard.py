@@ -181,7 +181,7 @@ def run_portfolio_system():
     st.subheader("Model Execution & Performance Engine")
 
     start_date = "2026-07-01"
-    end_date = "2026-10-13"
+    end_date = "2026-10-12"
 
     actual_dates = [
         "2026-07-13",
@@ -333,9 +333,8 @@ def run_portfolio_system():
     past_holdings = get_top_10_holdings(pd.to_datetime("2026-07-15"))
     aug_holdings = get_top_10_holdings(pd.to_datetime("2026-08-15"))
     sep_holdings = get_top_10_holdings(pd.to_datetime("2026-09-15"))
-    current_holdings = get_top_10_holdings(pd.to_datetime("2026-10-12"))
+    current_holdings = get_top_10_holdings(pd.to_datetime("2026-10-09"))
 
-    # Cleaned extended proxies (AVGO and AMD removed to prevent double counting with Top 10)
     extended_tickers = [
         "SOXX",
         "QQQ",
@@ -414,20 +413,27 @@ def run_portfolio_system():
             if idx_date not in returns_df.index:
                 continue
 
+            # Shift return lookup back one trading day to align with publication lag
+            prev_idx = returns_df.index.get_loc(idx_date)
+            if prev_idx == 0:
+                continue
+            lagged_date = returns_df.index[prev_idx - 1]
+
             day_top_10 = get_top_10_holdings(idx_date)
             t1_w = day_top_10["Weight"].sum()
             t2_w = 1.0 - t1_w
 
             t1_ret_val = sum(
-                (row["Weight"] / t1_w) * returns_df[row["Ticker"]].loc[idx_date]
+                (row["Weight"] / t1_w)
+                * returns_df[row["Ticker"]].loc[lagged_date]
                 for _, row in day_top_10.iterrows()
             )
 
             t2_ret_val = (
-                (w_soxx * soxx_ret.loc[idx_date])
-                + (w_igv * igv_ret.loc[idx_date])
-                + (w_ciene * ciene_ret.loc[idx_date])
-                + (w_core * core_residual_ret.loc[idx_date])
+                (w_soxx * soxx_ret.loc[lagged_date])
+                + (w_igv * igv_ret.loc[lagged_date])
+                + (w_ciene * ciene_ret.loc[lagged_date])
+                + (w_core * core_residual_ret.loc[lagged_date])
             )
             gross_return = (
                 (t1_w * t1_ret_val) + (t2_w * t2_ret_val) - daily_fee_drag
@@ -456,7 +462,7 @@ def run_portfolio_system():
     )
     opt_soxx, opt_igv, opt_ciene, opt_core = result.x
 
-    # Backtest Table Generation
+    # Backtest Table Generation (with 1-day shifted alignment)
     backtest_data = []
     current_model_nav = actual_nav_dict[matched_dates[0]]
 
@@ -467,19 +473,30 @@ def run_portfolio_system():
             modeled_val = actual_val
         else:
             idx_date = pd.to_datetime(d_str)
+            if idx_date in returns_df.index:
+                prev_idx = returns_df.index.get_loc(idx_date)
+                lagged_date = (
+                    returns_df.index[prev_idx - 1]
+                    if prev_idx > 0
+                    else idx_date
+                )
+            else:
+                lagged_date = idx_date
+
             day_top_10 = get_top_10_holdings(idx_date)
             t1_w = day_top_10["Weight"].sum()
             t2_w = 1.0 - t1_w
 
             t1_ret_val = sum(
-                (row["Weight"] / t1_w) * returns_df[row["Ticker"]].loc[idx_date]
+                (row["Weight"] / t1_w)
+                * returns_df[row["Ticker"]].loc[lagged_date]
                 for _, row in day_top_10.iterrows()
             )
             t2_ret_val = (
-                (opt_soxx * soxx_ret.loc[idx_date])
-                + (opt_igv * igv_ret.loc[idx_date])
-                + (opt_ciene * ciene_ret.loc[idx_date])
-                + (opt_core * core_residual_ret.loc[idx_date])
+                (opt_soxx * soxx_ret.loc[lagged_date])
+                + (opt_igv * igv_ret.loc[lagged_date])
+                + (opt_ciene * ciene_ret.loc[lagged_date])
+                + (opt_core * core_residual_ret.loc[lagged_date])
             )
             gross_return = (
                 (t1_w * t1_ret_val) + (t2_w * t2_ret_val) - daily_fee_drag
