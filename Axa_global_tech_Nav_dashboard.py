@@ -16,10 +16,8 @@ def get_top_10_holdings(target_date=None):
     if target_date is not None:
         target_date = pd.to_datetime(target_date)
 
-    cutoff_jul = pd.to_datetime("2026-07-01")
     cutoff_aug = pd.to_datetime("2026-08-01")
     cutoff_sep = pd.to_datetime("2026-09-01")
-    cutoff_oct = pd.to_datetime("2026-10-01")
 
     # Hard Stop 1: Prior to August (July Baseline)
     if target_date is not None and target_date < cutoff_aug:
@@ -125,7 +123,7 @@ def get_top_10_holdings(target_date=None):
                 "USD",
             ],
         })
-    # Hard Stop 3 & Current: October Onward (Latest FT Turnover Snapshot)[cite: 6]
+    # Hard Stop 3 & Current: October Onward (Latest FT Turnover Snapshot)
     else:
         return pd.DataFrame({
             "Name": [
@@ -335,7 +333,6 @@ def run_portfolio_system():
     sep_holdings = get_top_10_holdings(pd.to_datetime("2026-09-15"))
     current_holdings = get_top_10_holdings(pd.to_datetime("2026-10-09"))
 
-    # Extended proxies including tech breadth and optical networking (Ciena/XNTK)
     extended_tickers = [
         "SOXX",
         "QQQ",
@@ -351,7 +348,6 @@ def run_portfolio_system():
         "TWD=X",
     ]
 
-    # Fully deduplicated single set construction
     tickers_list = list(
         set(
             past_holdings["Ticker"].tolist()
@@ -396,20 +392,20 @@ def run_portfolio_system():
 
     soxx_ret = returns_df["SOXX"].fillna(0.0)
     igv_ret = returns_df["IGV"].fillna(0.0)
+    amd_ret = returns_df["AMD"].fillna(0.0)
+    avgo_ret = returns_df["AVGO"].fillna(0.0)
+    ciene_ret = returns_df["CIEN"].fillna(0.0)
+
     core_residual_ret = (
         returns_df["META"].fillna(0.0)
         + returns_df["AMZN"].fillna(0.0)
         + returns_df["TSLA"].fillna(0.0)
-        + returns_df["AMD"].fillna(0.0)
-        + returns_df["AVGO"].fillna(0.0)
-        + returns_df["CIEN"].fillna(0.0)
-        + returns_df["XNTK"].fillna(0.0)
-    ) / 7.0
+    ) / 3.0
 
     daily_fee_drag = 0.0068 / 365.0
 
     def objective(weights):
-        w_soxx, w_igv, w_core = weights
+        w_soxx, w_igv, w_amd, w_avgo, w_ciene, w_core = weights
         modeled = [actual_nav_dict[matched_dates[0]]]
         errors = []
 
@@ -431,6 +427,9 @@ def run_portfolio_system():
             t2_ret_val = (
                 (w_soxx * soxx_ret.loc[idx_date])
                 + (w_igv * igv_ret.loc[idx_date])
+                + (w_amd * amd_ret.loc[idx_date])
+                + (w_avgo * avgo_ret.loc[idx_date])
+                + (w_ciene * ciene_ret.loc[idx_date])
                 + (w_core * core_residual_ret.loc[idx_date])
             )
             gross_return = (
@@ -450,14 +449,15 @@ def run_portfolio_system():
 
         return np.mean(errors) if errors else 0.0
 
+    initial_weights = [0.2, 0.2, 0.15, 0.15, 0.15, 0.15]
     result = minimize(
         objective,
-        [0.4, 0.3, 0.3],
+        initial_weights,
         method="SLSQP",
-        bounds=[(0.0, 1.0), (0.0, 1.0), (0.0, 1.0)],
+        bounds=[(0.0, 1.0)] * 6,
         constraints={"type": "eq", "fun": lambda w: np.sum(w) - 1.0},
     )
-    opt_soxx, opt_igv, opt_core = result.x
+    opt_soxx, opt_igv, opt_amd, opt_avgo, opt_ciene, opt_core = result.x
 
     # Backtest Table Generation
     backtest_data = []
@@ -481,6 +481,9 @@ def run_portfolio_system():
             t2_ret_val = (
                 (opt_soxx * soxx_ret.loc[idx_date])
                 + (opt_igv * igv_ret.loc[idx_date])
+                + (opt_amd * amd_ret.loc[idx_date])
+                + (opt_avgo * avgo_ret.loc[idx_date])
+                + (opt_ciene * ciene_ret.loc[idx_date])
                 + (opt_core * core_residual_ret.loc[idx_date])
             )
             gross_return = (
@@ -518,11 +521,9 @@ def run_portfolio_system():
     # --- Separate Cash Value Chart with Total Portfolio Line ---
     st.subheader("Portfolio Cash Value Tracking (£)")
 
-    # Define static wrapper units
     gia_units = 8970.39
     isa_units = 4581.90
 
-    # Calculate individual and total cash values
     backtest_df["GIA_Cash"] = backtest_df["Actual NAV"] * gia_units
     backtest_df["ISA_Cash"] = backtest_df["Actual NAV"] * isa_units
     backtest_df["Total_Portfolio_Cash"] = (
@@ -541,7 +542,6 @@ def run_portfolio_system():
         },
     )
 
-    # Clean up trace names for the legend
     cash_fig.data[0].name = "GIA Cash Value"
     cash_fig.data[1].name = "ISA Cash Value"
     cash_fig.data[2].name = "Total Portfolio Value"
@@ -599,15 +599,14 @@ def run_portfolio_system():
             asset_returns.get("META", 0.0)
             + asset_returns.get("AMZN", 0.0)
             + asset_returns.get("TSLA", 0.0)
-            + asset_returns.get("AMD", 0.0)
-            + asset_returns.get("AVGO", 0.0)
-            + asset_returns.get("CIEN", 0.0)
-            + asset_returns.get("XNTK", 0.0)
-        ) / 7.0
+        ) / 3.0
 
         t2_return = (
             (opt_soxx * asset_returns.get("SOXX", 0.0))
             + (opt_igv * asset_returns.get("IGV", 0.0))
+            + (opt_amd * asset_returns.get("AMD", 0.0))
+            + (opt_avgo * asset_returns.get("AVGO", 0.0))
+            + (opt_ciene * asset_returns.get("CIEN", 0.0))
             + (opt_core * live_core_residual)
         )
 
