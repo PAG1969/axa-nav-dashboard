@@ -181,7 +181,7 @@ def run_portfolio_system():
     st.subheader("Model Execution & Performance Engine")
 
     start_date = "2026-07-01"
-    end_date = "2026-10-13"
+    end_date = "2026-10-12"
 
     actual_dates = [
         "2026-07-13",
@@ -333,19 +333,18 @@ def run_portfolio_system():
     past_holdings = get_top_10_holdings(pd.to_datetime("2026-07-15"))
     aug_holdings = get_top_10_holdings(pd.to_datetime("2026-08-15"))
     sep_holdings = get_top_10_holdings(pd.to_datetime("2026-09-15"))
-    current_holdings = get_top_10_holdings(pd.to_datetime("2026-10-12"))
+    current_holdings = get_top_10_holdings(pd.to_datetime("2026-10-09"))
 
+    # Cleaned extended proxies (AVGO and AMD removed to prevent double counting with Top 10)
     extended_tickers = [
         "SOXX",
         "QQQ",
         "IGV",
         "XNTK",
+        "CIEN",
         "META",
         "AMZN",
         "TSLA",
-        "AMD",
-        "AVGO",
-        "CIEN",
         "KRW=X",
         "TWD=X",
     ]
@@ -394,8 +393,6 @@ def run_portfolio_system():
 
     soxx_ret = returns_df["SOXX"].fillna(0.0)
     igv_ret = returns_df["IGV"].fillna(0.0)
-    amd_ret = returns_df["AMD"].fillna(0.0)
-    avgo_ret = returns_df["AVGO"].fillna(0.0)
     ciene_ret = returns_df["CIEN"].fillna(0.0)
 
     core_residual_ret = (
@@ -407,7 +404,7 @@ def run_portfolio_system():
     daily_fee_drag = 0.0068 / 365.0
 
     def objective(weights):
-        w_soxx, w_igv, w_amd, w_avgo, w_ciene, w_core = weights
+        w_soxx, w_igv, w_ciene, w_core = weights
         modeled = [actual_nav_dict[matched_dates[0]]]
         errors = []
 
@@ -429,8 +426,6 @@ def run_portfolio_system():
             t2_ret_val = (
                 (w_soxx * soxx_ret.loc[idx_date])
                 + (w_igv * igv_ret.loc[idx_date])
-                + (w_amd * amd_ret.loc[idx_date])
-                + (w_avgo * avgo_ret.loc[idx_date])
                 + (w_ciene * ciene_ret.loc[idx_date])
                 + (w_core * core_residual_ret.loc[idx_date])
             )
@@ -451,15 +446,15 @@ def run_portfolio_system():
 
         return np.mean(errors) if errors else 0.0
 
-    initial_weights = [0.2, 0.2, 0.15, 0.15, 0.15, 0.15]
+    initial_weights = [0.25, 0.25, 0.25, 0.25]
     result = minimize(
         objective,
         initial_weights,
         method="SLSQP",
-        bounds=[(0.0, 1.0)] * 6,
+        bounds=[(0.0, 1.0)] * 4,
         constraints={"type": "eq", "fun": lambda w: np.sum(w) - 1.0},
     )
-    opt_soxx, opt_igv, opt_amd, opt_avgo, opt_ciene, opt_core = result.x
+    opt_soxx, opt_igv, opt_ciene, opt_core = result.x
 
     # Backtest Table Generation
     backtest_data = []
@@ -483,8 +478,6 @@ def run_portfolio_system():
             t2_ret_val = (
                 (opt_soxx * soxx_ret.loc[idx_date])
                 + (opt_igv * igv_ret.loc[idx_date])
-                + (opt_amd * amd_ret.loc[idx_date])
-                + (opt_avgo * avgo_ret.loc[idx_date])
                 + (opt_ciene * ciene_ret.loc[idx_date])
                 + (opt_core * core_residual_ret.loc[idx_date])
             )
@@ -557,7 +550,7 @@ def run_portfolio_system():
     st.plotly_chart(cash_fig, use_container_width=True)
 
     st.subheader("Live Pre-Market Prediction (11:00 AM Decision Engine)")
-    live_top_10 = get_top_10_holdings(pd.to_datetime("2026-10-09"))
+    live_top_10 = get_top_10_holdings(pd.to_datetime("2026-10-12"))
     tier1_weight = live_top_10["Weight"].sum()
     tier2_weight = 1.0 - tier1_weight
 
@@ -606,8 +599,6 @@ def run_portfolio_system():
         t2_return = (
             (opt_soxx * asset_returns.get("SOXX", 0.0))
             + (opt_igv * asset_returns.get("IGV", 0.0))
-            + (opt_amd * asset_returns.get("AMD", 0.0))
-            + (opt_avgo * asset_returns.get("AVGO", 0.0))
             + (opt_ciene * asset_returns.get("CIEN", 0.0))
             + (opt_core * live_core_residual)
         )
