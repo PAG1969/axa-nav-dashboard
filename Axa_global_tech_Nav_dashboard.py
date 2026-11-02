@@ -181,7 +181,7 @@ def run_portfolio_system():
     st.subheader("Model Execution & Performance Engine")
 
     start_date = "2026-07-01"
-    end_date = "2026-10-29"
+    end_date = "2026-11-02"
 
     actual_dates = [
         "2026-07-13",
@@ -261,6 +261,8 @@ def run_portfolio_system():
         "2026-10-26",
         "2026-10-27",
         "2026-10-28",
+        "2026-10-29",
+        "2026-10-30",
     ]
 
     actual_nav_path = [
@@ -341,6 +343,9 @@ def run_portfolio_system():
         3.920,
         4.000,
         4.100,
+        4.090,
+        3.910,
+        
     ]
 
     # --- SIDEBAR WIDGETS FOR DYNAMIC CONTROL ---
@@ -357,7 +362,7 @@ def run_portfolio_system():
     past_holdings = get_top_10_holdings(pd.to_datetime("2026-07-15"))
     aug_holdings = get_top_10_holdings(pd.to_datetime("2026-08-15"))
     sep_holdings = get_top_10_holdings(pd.to_datetime("2026-09-15"))
-    current_holdings = get_top_10_holdings(pd.to_datetime("2026-10-28"))
+    current_holdings = get_top_10_holdings(pd.to_datetime("2026-10-30"))
 
     extended_tickers = [
         "SOXX",
