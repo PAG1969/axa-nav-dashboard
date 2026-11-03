@@ -181,7 +181,7 @@ def run_portfolio_system():
     st.subheader("Model Execution & Performance Engine")
 
     start_date = "2026-07-01"
-    end_date = "2026-11-03"
+    end_date = "2026-11-04"
 
     actual_dates = [
         "2026-07-13",
@@ -264,6 +264,7 @@ def run_portfolio_system():
         "2026-10-29",
         "2026-10-30",
         "2026-11-02",
+        "2026-11-03",
     ]
 
     actual_nav_path = [
@@ -347,7 +348,7 @@ def run_portfolio_system():
         4.090,
         3.910,
         3.820,
-        
+        3.680,
     ]
 
     # --- SIDEBAR WIDGETS FOR DYNAMIC CONTROL ---
