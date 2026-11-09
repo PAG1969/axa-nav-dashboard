@@ -9,7 +9,7 @@ import streamlit as st
 import yfinance as yf
 
 st.title("AXA Global Technology D-Class Unit NAV Predictor")
-st.write("Streamlit Dashboard Active 🚀 (Multi-Hard Stop Architecture)")
+st.write("Streamlit Dashboard Active 🚀 (Multi-Hard Stop & Cleaned Residual Architecture)")
 
 
 def get_top_10_holdings(target_date=None):
@@ -237,177 +237,35 @@ def run_portfolio_system():
     end_date = "2026-11-09"
 
     actual_dates = [
-        "2026-07-13",
-        "2026-07-14",
-        "2026-07-15",
-        "2026-07-16",
-        "2026-07-17",
-        "2026-07-20",
-        "2026-07-21",
-        "2026-07-22",
-        "2026-07-23",
-        "2026-07-24",
-        "2026-07-27",
-        "2026-07-28",
-        "2026-07-29",
-        "2026-07-30",
-        "2026-07-31",
-        "2026-08-03",
-        "2026-08-04",
-        "2026-08-05",
-        "2026-08-06",
-        "2026-08-07",
-        "2026-08-10",
-        "2026-08-11",
-        "2026-08-12",
-        "2026-08-13",
-        "2026-08-14",
-        "2026-08-17",
-        "2026-08-18",
-        "2026-08-19",
-        "2026-08-20",
-        "2026-08-21",
-        "2026-08-24",
-        "2026-08-25",
-        "2026-08-26",
-        "2026-08-27",
-        "2026-08-28",
-        "2026-09-01",
-        "2026-09-02",
-        "2026-09-03",
-        "2026-09-04",
-        "2026-09-07",
-        "2026-09-08",
-        "2026-09-09",
-        "2026-09-10",
-        "2026-09-11",
-        "2026-09-14",
-        "2026-09-15",
-        "2026-09-16",
-        "2026-09-17",
-        "2026-09-18",
-        "2026-09-21",
-        "2026-09-22",
-        "2026-09-23",
-        "2026-09-24",
-        "2026-09-25",
-        "2026-09-28",
-        "2026-09-29",
-        "2026-09-30",
-        "2026-10-01",
-        "2026-10-02",
-        "2026-10-05",
-        "2026-10-06",
-        "2026-10-07",
-        "2026-10-08",
-        "2026-10-09",
-        "2026-10-12",
-        "2026-10-13",
-        "2026-10-14",
-        "2026-10-15",
-        "2026-10-16",
-        "2026-10-19",
-        "2026-10-20",
-        "2026-10-21",
-        "2026-10-22",
-        "2026-10-23",
-        "2026-10-26",
-        "2026-10-27",
-        "2026-10-28",
-        "2026-10-29",
-        "2026-10-30",
-        "2026-11-02",
-        "2026-11-03",
-        "2026-11-04",
-        "2026-11-05",
-        "2026-11-06",
+        "2026-07-13", "2026-07-14", "2026-07-15", "2026-07-16", "2026-07-17",
+        "2026-07-20", "2026-07-21", "2026-07-22", "2026-07-23", "2026-07-24",
+        "2026-07-27", "2026-07-28", "2026-07-29", "2026-07-30", "2026-07-31",
+        "2026-08-03", "2026-08-04", "2026-08-05", "2026-08-06", "2026-08-07",
+        "2026-08-10", "2026-08-11", "2026-08-12", "2026-08-13", "2026-08-14",
+        "2026-08-17", "2026-08-18", "2026-08-19", "2026-08-20", "2026-08-21",
+        "2026-08-24", "2026-08-25", "2026-08-26", "2026-08-27", "2026-08-28",
+        "2026-09-01", "2026-09-02", "2026-09-03", "2026-09-04", "2026-09-07",
+        "2026-09-08", "2026-09-09", "2026-09-10", "2026-09-11", "2026-09-14",
+        "2026-09-15", "2026-09-16", "2026-09-17", "2026-09-18", "2026-09-21",
+        "2026-09-22", "2026-09-23", "2026-09-24", "2026-09-25", "2026-09-28",
+        "2026-09-29", "2026-09-30", "2026-10-01", "2026-10-02", "2026-10-05",
+        "2026-10-06", "2026-10-07", "2026-10-08", "2026-10-09", "2026-10-12",
+        "2026-10-13", "2026-10-14", "2026-10-15", "2026-10-16", "2026-10-19",
+        "2026-10-20", "2026-10-21", "2026-10-22", "2026-10-23", "2026-10-26",
+        "2026-10-27", "2026-10-28", "2026-10-29", "2026-10-30", "2026-11-02",
+        "2026-11-03", "2026-11-04", "2026-11-05", "2026-11-06",
     ]
 
     actual_nav_path = [
-        4.26,
-        4.17,
-        4.24,
-        4.14,
-        3.96,
-        3.96,
-        4.06,
-        4.11,
-        4.09,
-        4.02,
-        3.99,
-        3.89,
-        3.77,
-        3.68,
-        3.93,
-        3.90,
-        3.99,
-        4.17,
-        4.10,
-        4.12,
-        4.20,
-        4.16,
-        4.16,
-        4.24,
-        4.286,
-        4.269,
-        4.235,
-        4.117,
-        4.062,
-        4.057,
-        4.076,
-        4.001,
-        4.050,
-        4.140,
-        4.179,
-        4.101,
-        4.029,
-        4.020,
-        4.080,
-        4.130,
-        4.130,
-        4.160,
-        4.160,
-        4.100,
-        4.060,
-        4.040,
-        4.030,
-        4.110,
-        4.190,
-        4.250,
-        4.380,
-        4.440,
-        4.420,
-        4.430,
-        4.420,
-        4.390,
-        4.400,
-        4.450,
-        4.510,
-        4.570,
-        4.600,
-        4.630,
-        4.590,
-        4.490,
-        4.540,
-        4.410,
-        4.400,
-        4.140,
-        4.150,
-        4.020,
-        4.030,
-        4.010,
-        4.000,
-        3.880,
-        3.920,
-        4.000,
-        4.100,
-        4.090,
-        3.910,
-        3.820,
-        3.680,
-        3.760,
-        3.680,
-        3.430,
+        4.26, 4.17, 4.24, 4.14, 3.96, 3.96, 4.06, 4.11, 4.09, 4.02,
+        3.99, 3.89, 3.77, 3.68, 3.93, 3.90, 3.99, 4.17, 4.10, 4.12,
+        4.20, 4.16, 4.16, 4.24, 4.286, 4.269, 4.235, 4.117, 4.062, 4.057,
+        4.076, 4.001, 4.050, 4.140, 4.179, 4.101, 4.029, 4.020, 4.080, 4.130,
+        4.130, 4.160, 4.160, 4.100, 4.060, 4.040, 4.030, 4.110, 4.190, 4.250,
+        4.380, 4.440, 4.420, 4.430, 4.420, 4.390, 4.400, 4.450, 4.510, 4.570,
+        4.600, 4.630, 4.590, 4.490, 4.540, 4.410, 4.400, 4.140, 4.150, 4.020,
+        4.030, 4.010, 4.000, 3.880, 3.920, 4.000, 4.100, 4.090, 3.910, 3.820,
+        3.680, 3.760, 3.680, 3.430,
     ]
 
     # --- SIDEBAR WIDGETS FOR DYNAMIC CONTROL ---
@@ -425,17 +283,14 @@ def run_portfolio_system():
     aug_holdings = get_top_10_holdings(pd.to_datetime("2026-08-15"))
     sep_holdings = get_top_10_holdings(pd.to_datetime("2026-09-15"))
     oct_holdings = get_top_10_holdings(pd.to_datetime("2026-10-15"))
-    current_holdings = get_top_10_holdings(pd.to_datetime("2026-11-09"))
+    current_holdings = get_top_10_holdings(pd.to_datetime("2026-11-06"))
 
+    # Tier-2 Pure Non-Overlapping Proxies (Equal-Weighted Broad Index & Mid-Cap Growth)
     extended_tickers = [
-        "SOXX",
-        "QQQ",
-        "IGV",
-        "XNTK",
-        "CIEN",
-        "META",
-        "AMZN",
-        "TSLA",
+        "XNTK",   # Equal-weighted tech index (avoids cap-weighting NVDA/MSFT distortion)
+        "CIEN",   # Network Infrastructure proxy
+        "AMZN",   # Broad Cloud/Consumer Tech proxy
+        "TSLA",   # Tech/Growth proxy
         "KRW=X",
         "TWD=X",
     ]
@@ -483,19 +338,17 @@ def run_portfolio_system():
     actual_nav_dict = dict(zip(actual_dates, actual_nav_path))
     matched_dates = [d for d in available_dates if d in actual_nav_dict]
 
-    soxx_ret = returns_df["SOXX"].fillna(0.0)
-    igv_ret = returns_df["IGV"].fillna(0.0)
-    ciene_ret = returns_df["CIEN"].fillna(0.0)
-
+    # Non-overlapping residual components for Tier-2
+    xntk_ret = returns_df["XNTK"].fillna(0.0)
+    cien_ret = returns_df["CIEN"].fillna(0.0)
     core_residual_ret = (
-        returns_df["AMZN"].fillna(0.0)
-        + returns_df["TSLA"].fillna(0.0)
+        returns_df["AMZN"].fillna(0.0) + returns_df["TSLA"].fillna(0.0)
     ) / 2.0
 
     daily_fee_drag = 0.0068 / 365.0
 
     def objective(weights):
-        w_soxx, w_igv, w_ciene, w_core = weights
+        w_xntk, w_cien, w_core = weights
         modeled = [actual_nav_dict[matched_dates[0]]]
         errors = []
 
@@ -521,10 +374,10 @@ def run_portfolio_system():
                 for _, row in day_top_10.iterrows()
             )
 
+            # Tier-2 Orthogonalized Return (Clean of mega-cap duplication)
             t2_ret_val = (
-                (w_soxx * soxx_ret.loc[lagged_date])
-                + (w_igv * igv_ret.loc[lagged_date])
-                + (w_ciene * ciene_ret.loc[lagged_date])
+                (w_xntk * xntk_ret.loc[lagged_date])
+                + (w_cien * cien_ret.loc[lagged_date])
                 + (w_core * core_residual_ret.loc[lagged_date])
             )
             gross_return = (
@@ -544,15 +397,15 @@ def run_portfolio_system():
 
         return np.mean(errors) if errors else 0.0
 
-    initial_weights = [0.25, 0.25, 0.25, 0.25]
+    initial_weights = [0.34, 0.33, 0.33]
     result = minimize(
         objective,
         initial_weights,
         method="SLSQP",
-        bounds=[(0.0, 1.0)] * 4,
+        bounds=[(0.0, 1.0)] * 3,
         constraints={"type": "eq", "fun": lambda w: np.sum(w) - 1.0},
     )
-    opt_soxx, opt_igv, opt_ciene, opt_core = result.x
+    opt_xntk, opt_cien, opt_core = result.x
 
     # Backtest Table Generation (with 1-day shifted alignment)
     backtest_data = []
@@ -585,9 +438,8 @@ def run_portfolio_system():
                 for _, row in day_top_10.iterrows()
             )
             t2_ret_val = (
-                (opt_soxx * soxx_ret.loc[lagged_date])
-                + (opt_igv * igv_ret.loc[lagged_date])
-                + (opt_ciene * ciene_ret.loc[lagged_date])
+                (opt_xntk * xntk_ret.loc[lagged_date])
+                + (opt_cien * cien_ret.loc[lagged_date])
                 + (opt_core * core_residual_ret.loc[lagged_date])
             )
             gross_return = (
@@ -700,15 +552,12 @@ def run_portfolio_system():
             )
 
         live_core_residual = (
-            asset_returns.get("META", 0.0)
-            + asset_returns.get("AMZN", 0.0)
-            + asset_returns.get("TSLA", 0.0)
-        ) / 3.0
+            asset_returns.get("AMZN", 0.0) + asset_returns.get("TSLA", 0.0)
+        ) / 2.0
 
         t2_return = (
-            (opt_soxx * asset_returns.get("SOXX", 0.0))
-            + (opt_igv * asset_returns.get("IGV", 0.0))
-            + (opt_ciene * asset_returns.get("CIEN", 0.0))
+            (opt_xntk * asset_returns.get("XNTK", 0.0))
+            + (opt_cien * asset_returns.get("CIEN", 0.0))
             + (opt_core * live_core_residual)
         )
 
