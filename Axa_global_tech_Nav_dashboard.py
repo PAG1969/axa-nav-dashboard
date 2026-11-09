@@ -283,7 +283,7 @@ def run_portfolio_system():
     aug_holdings = get_top_10_holdings(pd.to_datetime("2026-08-15"))
     sep_holdings = get_top_10_holdings(pd.to_datetime("2026-09-15"))
     oct_holdings = get_top_10_holdings(pd.to_datetime("2026-10-15"))
-    current_holdings = get_top_10_holdings(pd.to_datetime("2026-11-06"))
+    current_holdings = get_top_10_holdings(pd.to_datetime("2026-11-09"))
 
     # Restored Tier-2 Extended Tickers (SOXX, IGV, CIEN, Core Residual)
     extended_tickers = [
@@ -344,19 +344,18 @@ def run_portfolio_system():
 
     soxx_ret = returns_df["SOXX"].fillna(0.0)
     igv_ret = returns_df["IGV"].fillna(0.0)
-    ciene_ret = returns_df["CIEN"].fillna(0.0)
+    cien_ret = returns_df["CIEN"].fillna(0.0)
 
-    # Core residual including META, AMZN, TSLA
+    # Core residual including AMZN, TSLA
     core_residual_ret = (
-        returns_df["META"].fillna(0.0)
-        + returns_df["AMZN"].fillna(0.0)
+        returns_df["AMZN"].fillna(0.0)
         + returns_df["TSLA"].fillna(0.0)
-    ) / 3.0
+    ) / 2.0
 
     daily_fee_drag = 0.0068 / 365.0
 
     def objective(weights):
-        w_soxx, w_igv, w_ciene, w_core = weights
+        w_soxx, w_igv, w_cien, w_core = weights
         modeled = [actual_nav_dict[matched_dates[0]]]
         errors = []
 
@@ -385,7 +384,7 @@ def run_portfolio_system():
             t2_ret_val = (
                 (w_soxx * soxx_ret.loc[lagged_date])
                 + (w_igv * igv_ret.loc[lagged_date])
-                + (w_ciene * ciene_ret.loc[lagged_date])
+                + (w_cien * cien_ret.loc[lagged_date])
                 + (w_core * core_residual_ret.loc[lagged_date])
             )
             gross_return = (
@@ -413,7 +412,7 @@ def run_portfolio_system():
         bounds=[(0.0, 1.0)] * 4,
         constraints={"type": "eq", "fun": lambda w: np.sum(w) - 1.0},
     )
-    opt_soxx, opt_igv, opt_ciene, opt_core = result.x
+    opt_soxx, opt_igv, opt_cien, opt_core = result.x
 
     # Backtest Table Generation (with 1-day shifted alignment)
     backtest_data = []
@@ -448,7 +447,7 @@ def run_portfolio_system():
             t2_ret_val = (
                 (opt_soxx * soxx_ret.loc[lagged_date])
                 + (opt_igv * igv_ret.loc[lagged_date])
-                + (opt_ciene * ciene_ret.loc[lagged_date])
+                + (opt_cien * cien_ret.loc[lagged_date])
                 + (opt_core * core_residual_ret.loc[lagged_date])
             )
             gross_return = (
