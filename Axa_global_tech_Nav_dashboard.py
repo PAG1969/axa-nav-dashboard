@@ -425,7 +425,7 @@ def run_portfolio_system():
     aug_holdings = get_top_10_holdings(pd.to_datetime("2026-08-15"))
     sep_holdings = get_top_10_holdings(pd.to_datetime("2026-09-15"))
     oct_holdings = get_top_10_holdings(pd.to_datetime("2026-10-15"))
-    current_holdings = get_top_10_holdings(pd.to_datetime("2026-11-06"))
+    current_holdings = get_top_10_holdings(pd.to_datetime("2026-11-09"))
 
     extended_tickers = [
         "SOXX",
