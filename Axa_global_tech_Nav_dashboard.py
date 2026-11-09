@@ -9,7 +9,7 @@ import streamlit as st
 import yfinance as yf
 
 st.title("AXA Global Technology D-Class Unit NAV Predictor")
-st.write("Streamlit Dashboard Active 🚀 (Multi-Hard Stop & Cleaned Residual Architecture)")
+st.write("Streamlit Dashboard Active 🚀 (Multi-Hard Stop Architecture)")
 
 
 def get_top_10_holdings(target_date=None):
@@ -285,12 +285,16 @@ def run_portfolio_system():
     oct_holdings = get_top_10_holdings(pd.to_datetime("2026-10-15"))
     current_holdings = get_top_10_holdings(pd.to_datetime("2026-11-06"))
 
-    # Tier-2 Pure Non-Overlapping Proxies (Equal-Weighted Broad Index & Mid-Cap Growth)
+    # Restored Tier-2 Extended Tickers (SOXX, IGV, CIEN, Core Residual)
     extended_tickers = [
-        "XNTK",   # Equal-weighted tech index (avoids cap-weighting NVDA/MSFT distortion)
-        "CIEN",   # Network Infrastructure proxy
-        "AMZN",   # Broad Cloud/Consumer Tech proxy
-        "TSLA",   # Tech/Growth proxy
+        "SOXX",
+        "QQQ",
+        "IGV",
+        "XNTK",
+        "CIEN",
+        "META",
+        "AMZN",
+        "TSLA",
         "KRW=X",
         "TWD=X",
     ]
@@ -338,17 +342,21 @@ def run_portfolio_system():
     actual_nav_dict = dict(zip(actual_dates, actual_nav_path))
     matched_dates = [d for d in available_dates if d in actual_nav_dict]
 
-    # Non-overlapping residual components for Tier-2
-    xntk_ret = returns_df["XNTK"].fillna(0.0)
-    cien_ret = returns_df["CIEN"].fillna(0.0)
+    soxx_ret = returns_df["SOXX"].fillna(0.0)
+    igv_ret = returns_df["IGV"].fillna(0.0)
+    ciene_ret = returns_df["CIEN"].fillna(0.0)
+
+    # Core residual including META, AMZN, TSLA
     core_residual_ret = (
-        returns_df["AMZN"].fillna(0.0) + returns_df["TSLA"].fillna(0.0)
-    ) / 2.0
+        returns_df["META"].fillna(0.0)
+        + returns_df["AMZN"].fillna(0.0)
+        + returns_df["TSLA"].fillna(0.0)
+    ) / 3.0
 
     daily_fee_drag = 0.0068 / 365.0
 
     def objective(weights):
-        w_xntk, w_cien, w_core = weights
+        w_soxx, w_igv, w_ciene, w_core = weights
         modeled = [actual_nav_dict[matched_dates[0]]]
         errors = []
 
@@ -374,10 +382,10 @@ def run_portfolio_system():
                 for _, row in day_top_10.iterrows()
             )
 
-            # Tier-2 Orthogonalized Return (Clean of mega-cap duplication)
             t2_ret_val = (
-                (w_xntk * xntk_ret.loc[lagged_date])
-                + (w_cien * cien_ret.loc[lagged_date])
+                (w_soxx * soxx_ret.loc[lagged_date])
+                + (w_igv * igv_ret.loc[lagged_date])
+                + (w_ciene * ciene_ret.loc[lagged_date])
                 + (w_core * core_residual_ret.loc[lagged_date])
             )
             gross_return = (
@@ -397,15 +405,15 @@ def run_portfolio_system():
 
         return np.mean(errors) if errors else 0.0
 
-    initial_weights = [0.34, 0.33, 0.33]
+    initial_weights = [0.25, 0.25, 0.25, 0.25]
     result = minimize(
         objective,
         initial_weights,
         method="SLSQP",
-        bounds=[(0.0, 1.0)] * 3,
+        bounds=[(0.0, 1.0)] * 4,
         constraints={"type": "eq", "fun": lambda w: np.sum(w) - 1.0},
     )
-    opt_xntk, opt_cien, opt_core = result.x
+    opt_soxx, opt_igv, opt_ciene, opt_core = result.x
 
     # Backtest Table Generation (with 1-day shifted alignment)
     backtest_data = []
@@ -438,8 +446,9 @@ def run_portfolio_system():
                 for _, row in day_top_10.iterrows()
             )
             t2_ret_val = (
-                (opt_xntk * xntk_ret.loc[lagged_date])
-                + (opt_cien * cien_ret.loc[lagged_date])
+                (opt_soxx * soxx_ret.loc[lagged_date])
+                + (opt_igv * igv_ret.loc[lagged_date])
+                + (opt_ciene * ciene_ret.loc[lagged_date])
                 + (opt_core * core_residual_ret.loc[lagged_date])
             )
             gross_return = (
@@ -552,12 +561,15 @@ def run_portfolio_system():
             )
 
         live_core_residual = (
-            asset_returns.get("AMZN", 0.0) + asset_returns.get("TSLA", 0.0)
-        ) / 2.0
+            asset_returns.get("META", 0.0)
+            + asset_returns.get("AMZN", 0.0)
+            + asset_returns.get("TSLA", 0.0)
+        ) / 3.0
 
         t2_return = (
-            (opt_xntk * asset_returns.get("XNTK", 0.0))
-            + (opt_cien * asset_returns.get("CIEN", 0.0))
+            (opt_soxx * asset_returns.get("SOXX", 0.0))
+            + (opt_igv * asset_returns.get("IGV", 0.0))
+            + (opt_ciene * asset_returns.get("CIEN", 0.0))
             + (opt_core * live_core_residual)
         )
 
