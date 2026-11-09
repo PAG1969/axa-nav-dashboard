@@ -18,6 +18,7 @@ def get_top_10_holdings(target_date=None):
 
     cutoff_aug = pd.to_datetime("2026-08-01")
     cutoff_sep = pd.to_datetime("2026-09-01")
+    cutoff_nov = pd.to_datetime("2026-11-01")
 
     # Hard Stop 1: Prior to August (July Baseline)
     if target_date is not None and target_date < cutoff_aug:
@@ -123,8 +124,8 @@ def get_top_10_holdings(target_date=None):
                 "USD",
             ],
         })
-    # Hard Stop 3 & Current: October Onward (Latest FT Turnover Snapshot)
-    else:
+    # Hard Stop 3: October Holdings (Prior Snapshot)
+    elif target_date is not None and target_date < cutoff_nov:
         return pd.DataFrame({
             "Name": [
                 "NVIDIA",
@@ -168,6 +169,58 @@ def get_top_10_holdings(target_date=None):
                 "USD",
                 "USD",
                 "KRW",
+                "USD",
+                "USD",
+                "USD",
+                "USD",
+                "USD",
+            ],
+        })
+    # Current: November Onward (Latest FT Snapshot)[cite: 4]
+    else:
+        return pd.DataFrame({
+            "Name": [
+                "NVIDIA Corporation",
+                "SK hynix Inc",
+                "Microsoft Corporation",
+                "Taiwan Semiconductor",
+                "Alphabet Inc Class C",
+                "Micron Technology",
+                "Cloudflare, Inc.",
+                "Meta Platforms, Inc.",
+                "Broadcom Inc",
+                "Advanced Micro Devices",
+            ],
+            "Ticker": [
+                "NVDA",
+                "000660.KS",
+                "MSFT",
+                "2330.TW",
+                "GOOG",
+                "MU",
+                "NET",
+                "META",
+                "AVGO",
+                "AMD",
+            ],
+            "Weight": [
+                0.0781,  #[cite: 4]
+                0.0544,  #[cite: 4]
+                0.0534,  #[cite: 4]
+                0.0506,  #[cite: 4]
+                0.0479,  #[cite: 4]
+                0.0430,  #[cite: 4]
+                0.0385,  #[cite: 4]
+                0.0348,  #[cite: 4]
+                0.0338,  #[cite: 4]
+                0.0321,  #[cite: 4]
+            ],
+            "Currency": [
+                "USD",
+                "KRW",
+                "USD",
+                "TWD",
+                "USD",
                 "USD",
                 "USD",
                 "USD",
@@ -371,6 +424,7 @@ def run_portfolio_system():
     past_holdings = get_top_10_holdings(pd.to_datetime("2026-07-15"))
     aug_holdings = get_top_10_holdings(pd.to_datetime("2026-08-15"))
     sep_holdings = get_top_10_holdings(pd.to_datetime("2026-09-15"))
+    oct_holdings = get_top_10_holdings(pd.to_datetime("2026-10-15"))
     current_holdings = get_top_10_holdings(pd.to_datetime("2026-11-06"))
 
     extended_tickers = [
@@ -391,6 +445,7 @@ def run_portfolio_system():
             past_holdings["Ticker"].tolist()
             + aug_holdings["Ticker"].tolist()
             + sep_holdings["Ticker"].tolist()
+            + oct_holdings["Ticker"].tolist()
             + current_holdings["Ticker"].tolist()
             + extended_tickers
         )
@@ -605,7 +660,7 @@ def run_portfolio_system():
     st.plotly_chart(cash_fig, use_container_width=True)
 
     st.subheader("Live Pre-Market Prediction (11:00 AM Decision Engine)")
-    live_top_10 = get_top_10_holdings(pd.to_datetime("2026-10-12"))
+    live_top_10 = get_top_10_holdings(pd.to_datetime("2026-11-06"))
     tier1_weight = live_top_10["Weight"].sum()
     tier2_weight = 1.0 - tier1_weight
 
