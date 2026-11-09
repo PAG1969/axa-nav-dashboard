@@ -488,10 +488,9 @@ def run_portfolio_system():
     ciene_ret = returns_df["CIEN"].fillna(0.0)
 
     core_residual_ret = (
-        returns_df["META"].fillna(0.0)
-        + returns_df["AMZN"].fillna(0.0)
+        returns_df["AMZN"].fillna(0.0)
         + returns_df["TSLA"].fillna(0.0)
-    ) / 3.0
+    ) / 2.0
 
     daily_fee_drag = 0.0068 / 365.0
 
