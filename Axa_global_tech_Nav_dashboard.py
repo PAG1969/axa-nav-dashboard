@@ -568,7 +568,7 @@ def run_portfolio_system():
         t2_return = (
             (opt_soxx * asset_returns.get("SOXX", 0.0))
             + (opt_igv * asset_returns.get("IGV", 0.0))
-            + (opt_ciene * asset_returns.get("CIEN", 0.0))
+            + (opt_cien * asset_returns.get("CIEN", 0.0))
             + (opt_core * live_core_residual)
         )
 
