@@ -234,7 +234,7 @@ def run_portfolio_system():
     st.subheader("Model Execution & Performance Engine")
 
     start_date = "2026-07-01"
-    end_date = "2026-11-13"
+    end_date = "2026-11-16"
 
     actual_dates = [
         "2026-07-13", "2026-07-14", "2026-07-15", "2026-07-16", "2026-07-17",
@@ -254,7 +254,7 @@ def run_portfolio_system():
         "2026-10-20", "2026-10-21", "2026-10-22", "2026-10-23", "2026-10-26",
         "2026-10-27", "2026-10-28", "2026-10-29", "2026-10-30", "2026-11-02",
         "2026-11-03", "2026-11-04", "2026-11-05", "2026-11-06", "2026-11-09",
-        "2026-11-10", "2026-11-11", "2026-11-12",
+        "2026-11-10", "2026-11-11", "2026-11-12", "2026-11-13",
     ]
 
     actual_nav_path = [
@@ -266,7 +266,7 @@ def run_portfolio_system():
         4.380, 4.440, 4.420, 4.430, 4.420, 4.390, 4.400, 4.450, 4.510, 4.570,
         4.600, 4.630, 4.590, 4.490, 4.540, 4.410, 4.400, 4.140, 4.150, 4.020,
         4.030, 4.010, 4.000, 3.880, 3.920, 4.000, 4.100, 4.090, 3.910, 3.820,
-        3.680, 3.760, 3.680, 3.430, 3.520, 3.700, 3.790, 3.840,
+        3.680, 3.760, 3.680, 3.430, 3.520, 3.700, 3.790, 3.840, 3.840,
     ]
 
     # --- SIDEBAR WIDGETS FOR DYNAMIC CONTROL ---
@@ -284,7 +284,7 @@ def run_portfolio_system():
     aug_holdings = get_top_10_holdings(pd.to_datetime("2026-08-15"))
     sep_holdings = get_top_10_holdings(pd.to_datetime("2026-09-15"))
     oct_holdings = get_top_10_holdings(pd.to_datetime("2026-10-15"))
-    current_holdings = get_top_10_holdings(pd.to_datetime("2026-11-12"))
+    current_holdings = get_top_10_holdings(pd.to_datetime("2026-11-13"))
 
     # Restored Tier-2 Extended Tickers (SOXX, IGV, CIEN, Core Residual)
     extended_tickers = [
