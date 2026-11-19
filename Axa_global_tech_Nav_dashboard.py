@@ -234,7 +234,7 @@ def run_portfolio_system():
     st.subheader("Model Execution & Performance Engine")
 
     start_date = "2026-07-01"
-    end_date = "2026-11-20"
+    end_date = "2026-11-19"
 
     actual_dates = [
         "2026-07-13", "2026-07-14", "2026-07-15", "2026-07-16", "2026-07-17",
